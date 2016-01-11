@@ -165,10 +165,10 @@ public class GameStateManager {
                 setActiveRenderer(gom);
             }
 
-            //Update Kaybuffer
+            //Update Keybuffer
             com.googlecode.lanterna.input.Key input = terminal.readInput();
             this.lastInput = input;
-
+            
             activeRenderer.update();
             activeRenderer.render();
             terminal.flush();

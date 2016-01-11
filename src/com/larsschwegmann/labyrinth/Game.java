@@ -135,7 +135,8 @@ public class Game implements Terminal.ResizeListener, Renderer{
                 //Only win if player has key for Exit
                 GameStateManager.sharedInstance().setCurrentGameState(GameStateManager.GameState.Won);
             } else {
-                //TODO: Tell player to get key first
+                String message = "Du brauchst einen Schlüssel um den Ausgang zu benutzen!";
+                RenderingToolchain.drawString(terminal, message, terminal.getTerminalSize().getColumns() - message.length() - 1, 1, Terminal.Color.RED);
             }
         }
 
