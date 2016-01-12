@@ -241,8 +241,7 @@ public class GameStateManager {
             setActiveRenderer(game);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
-            showError("Level wurde nicht gefunden!");
-            System.exit(1);
+            showError("Level wurde nicht gefunden! Bitte README.md lesen!");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -282,8 +281,7 @@ public class GameStateManager {
         } catch (FileNotFoundException ex) {
             //Level not found
             ex.printStackTrace();
-            showError("Kein gepeichertes Spiel gefunden!");
-            System.exit(1);
+            showError("Kein gepeichertes Spiel gefunden! Bitte README.md lesen!");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -303,7 +301,6 @@ public class GameStateManager {
             //Couldn't write file
             ex.printStackTrace();
             showError("Spielstand konnte nicht gepeichert werden!");
-            System.exit(1);
         }
     }
 

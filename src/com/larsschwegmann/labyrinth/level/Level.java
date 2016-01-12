@@ -84,10 +84,7 @@ public class Level {
     public void load() throws Exception {
         File fileToLoad = new File(getSaveFilePathForName(this.path));
         if (!fileToLoad.exists()) {
-            System.err.println("File not found: " + fileToLoad.getAbsolutePath());
-            System.err.println("Please make sure the file exists.");
-            System.err.println("Exiting...");
-            System.exit(1);
+            throw new FileNotFoundException(fileToLoad.getAbsolutePath() + " doesn't exist.");
         }
 
         boolean isSavedLevel = this.path.contains("saved");
