@@ -175,6 +175,7 @@ public class GameStateManager {
 
             if (DEBUG) {
                 try {
+                    //Prevent divisons by 0 in Frame counter
                     Thread.sleep(5);
                 } catch (Exception ex) {
                 }

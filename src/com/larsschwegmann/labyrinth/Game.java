@@ -10,6 +10,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     private Terminal terminal = GameStateManager.sharedInstance().getTerminal();
     private Level level; //current level
+    private DynamicTrapUpdateThread trapUpdater;
 
     //dynamic redrawing
     private boolean redrawStatics = true; //Redraws the level (walls and static objects)
@@ -50,6 +51,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     public Game(Level l) {
         this.level = l;
+        this.trapUpdater = new DynamicTrapUpdateThread(level.getDynamicTraps());
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -113,10 +115,12 @@ public class Game implements Terminal.ResizeListener, Renderer{
         }
 
         //Update dynamic enities
+        //Now done by trapUpdater
+        /*
         for (DynamicTrap d : level.getDynamicTraps()) {
             d.update();
         }
-
+        */
         //Check entities under player position
         Entity entityAtPlayerPos = level.getEntityAtIndex(p.getX(), p.getY());
 
@@ -367,6 +371,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     @Override
     public void willBecomeActiveRenderer() {
+        trapUpdater.startUpdating();
         terminal.clearScreen();
         playerDidMove = true;
         terminal.addResizeListener(this);
@@ -374,6 +379,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     @Override
     public void willResignActiveRenderer() {
+        trapUpdater.stopUpdating();
         terminal.removeResizeListener(this);
     }
 
@@ -381,4 +387,5 @@ public class Game implements Terminal.ResizeListener, Renderer{
         //playerDidMove = true;
         //this.level = null;
     }
+    
 }
