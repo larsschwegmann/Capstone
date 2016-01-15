@@ -1,4 +1,6 @@
-package com.larsschwegmann.labyrinth;
+package com.larsschwegmann.labyrinth.scenes;
+
+import com.larsschwegmann.labyrinth.GameStateManager;
 
 public class PauseMenu extends MainMenu{
 

@@ -1,7 +1,9 @@
-package com.larsschwegmann.labyrinth;
+package com.larsschwegmann.labyrinth.scenes;
 
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.TerminalSize;
+import com.larsschwegmann.labyrinth.GameStateManager;
+import com.larsschwegmann.labyrinth.rendering.RenderingToolchain;
 
 import java.util.StringTokenizer;
 

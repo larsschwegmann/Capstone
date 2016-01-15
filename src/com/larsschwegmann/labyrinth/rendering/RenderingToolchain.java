@@ -1,4 +1,4 @@
-package com.larsschwegmann.labyrinth;
+package com.larsschwegmann.labyrinth.rendering;
 
 import com.googlecode.lanterna.terminal.Terminal;
 

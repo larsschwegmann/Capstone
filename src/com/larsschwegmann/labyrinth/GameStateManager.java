@@ -1,5 +1,11 @@
 package com.larsschwegmann.labyrinth;
 
+import com.larsschwegmann.labyrinth.scenes.MainMenu;
+import com.larsschwegmann.labyrinth.scenes.PauseMenu;
+import com.larsschwegmann.labyrinth.scenes.GameOverMenu;
+import com.larsschwegmann.labyrinth.scenes.Game;
+import com.larsschwegmann.labyrinth.scenes.Renderer;
+import com.larsschwegmann.labyrinth.scenes.LegendMenu;
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.terminal.Terminal;

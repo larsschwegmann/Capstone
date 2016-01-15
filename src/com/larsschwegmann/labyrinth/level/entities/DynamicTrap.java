@@ -1,7 +1,7 @@
 package com.larsschwegmann.labyrinth.level.entities;
 
 import com.googlecode.lanterna.terminal.Terminal;
-import com.larsschwegmann.labyrinth.Game;
+import com.larsschwegmann.labyrinth.scenes.Game;
 import com.larsschwegmann.labyrinth.GameStateManager;
 import com.larsschwegmann.labyrinth.level.Level;
 
