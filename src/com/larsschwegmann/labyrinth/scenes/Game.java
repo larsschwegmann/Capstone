@@ -7,12 +7,14 @@ import com.larsschwegmann.labyrinth.GameStateManager;
 import com.larsschwegmann.labyrinth.rendering.RenderingToolchain;
 import com.larsschwegmann.labyrinth.level.Level;
 import com.larsschwegmann.labyrinth.level.entities.*;
+import java.util.Timer;
 
 public class Game implements Terminal.ResizeListener, Renderer{
 
     private Terminal terminal = GameStateManager.sharedInstance().getTerminal();
     private Level level; //current level
     private DynamicTrapUpdateThread trapUpdater;
+    private Timer trapUpdateTimer;
 
     //dynamic redrawing
     private boolean redrawStatics = true; //Redraws the level (walls and static objects)
@@ -53,7 +55,6 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     public Game(Level l) {
         this.level = l;
-        this.trapUpdater = new DynamicTrapUpdateThread(level.getDynamicTraps());
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -373,7 +374,10 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     @Override
     public void willBecomeActiveRenderer() {
-        trapUpdater.startUpdating();
+        //trapUpdater.startUpdating();
+        this.trapUpdater = new DynamicTrapUpdateThread(level.getDynamicTraps());
+        this.trapUpdateTimer = new Timer("DTrapUpdateThread");
+        this.trapUpdateTimer.schedule(this.trapUpdater, 0, 500);
         terminal.clearScreen();
         playerDidMove = true;
         terminal.addResizeListener(this);
@@ -381,7 +385,10 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     @Override
     public void willResignActiveRenderer() {
-        trapUpdater.stopUpdating();
+        //trapUpdater.stopUpdating();
+        this.trapUpdater.cancel();
+        this.trapUpdateTimer.purge();
+        this.trapUpdateTimer.cancel();
         terminal.removeResizeListener(this);
     }
 
