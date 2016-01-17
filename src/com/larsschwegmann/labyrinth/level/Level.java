@@ -104,8 +104,6 @@ public class Level {
                     levelData[x][y] = EntityFactory.createEntity(rawEntityValueAtPos, x, y);
                     if (levelData[x][y] instanceof Entrance && !isSavedLevel) {
                         player = EntityFactory.createPlayer(x, y);
-                    //} else if (rawEntityValueAtPos == 6 && isSavedLevel) {
-                    //    player = EntityFactory.createPlayer(x, y);
                     } else if (levelData[x][y] instanceof DynamicTrap) {
                         dynamicTraps.add((DynamicTrap)levelData[x][y]);
                     }
@@ -135,7 +133,6 @@ public class Level {
         Properties props = new Properties();
         props.setProperty(WIDTH_KEY, this.width + "");
         props.setProperty(HEIGHT_KEY, this.height + "");
-        //props.setProperty(player.getX() + "," + player.getY(), "6");
         props.setProperty(PLAYER_KEY, player.getX() + "," + player.getY());
         props.setProperty(PLAYER_LIVES_KEY, player.getLivesLeft() + "");
         props.setProperty(PLAYER_INVENTORY_KEY, player.getInventory().size() + "");

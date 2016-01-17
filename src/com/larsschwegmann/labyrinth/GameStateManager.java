@@ -242,7 +242,6 @@ public class GameStateManager {
             Level lvl = new Level("level_small.properties");
             lvl.load();
             game = new Game(lvl);
-            game.reset();
             this.currentGameState = GameState.Playing;
             setActiveRenderer(game);
         } catch (FileNotFoundException ex) {
@@ -281,7 +280,6 @@ public class GameStateManager {
             Level lvl = new Level("level_saved.properties");
             lvl.load();
             this.game = new Game(lvl);
-            this.game.reset(); //Resets Game Scene
             this.currentGameState = GameState.Playing;
             setActiveRenderer(game);
         } catch (FileNotFoundException ex) {

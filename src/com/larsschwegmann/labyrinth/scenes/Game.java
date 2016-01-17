@@ -391,10 +391,4 @@ public class Game implements Terminal.ResizeListener, Renderer{
         this.trapUpdateTimer.cancel();
         terminal.removeResizeListener(this);
     }
-
-    public void reset() {
-        //playerDidMove = true;
-        //this.level = null;
-    }
-    
 }
