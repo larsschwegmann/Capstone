@@ -83,7 +83,7 @@ public class Player extends Entity {
 
     @Override
     public char getSymbol() {
-        return '\u263A';
+        return '\u263B';
     }
 
     public boolean move (Direction d) {
