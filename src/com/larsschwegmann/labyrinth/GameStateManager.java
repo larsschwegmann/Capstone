@@ -177,7 +177,8 @@ public class GameStateManager {
             
             activeRenderer.update();
             activeRenderer.render();
-            
+            terminal.flush();
+
             if (DEBUG) {
                 try {
                     //Prevent divisons by 0 in Frame counter
@@ -239,7 +240,7 @@ public class GameStateManager {
      */
     public void startNewGame() {
         try {
-            Level lvl = new Level("level_small.properties");
+            Level lvl = new Level("level.properties");
             lvl.load();
             game = new Game(lvl);
             game.reset();
