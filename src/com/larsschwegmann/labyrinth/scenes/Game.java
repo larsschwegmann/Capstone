@@ -166,7 +166,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
         if (newChunkOffsetX != chunkOffsetX || newChunkOffsetY != chunkOffsetY) {
             redrawStatics = true;
-            redrawStatus = true;
+            //redrawStatus = true;
             playerDidMove = true;
         }
 
@@ -202,7 +202,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
         //Render Status
         if (redrawStatus || redrawLivesLeft) {
             //Redraw Player Health
-            if (p.getLivesLeft()/10 != previousLivesLeft || p.getLivesLeft()/10 == 10) {
+            if (p.getLivesLeft()/10 != previousLivesLeft || redrawStatus) {
                 previousLivesLeft = p.getLivesLeft()/10;
                 RenderingToolchain.clearRect(terminal, 2, 1, 17, 1);
                 int hearts = p.getLivesLeft()/10;
@@ -259,7 +259,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
             limitX = chunkOffsetX*chunkWidth-padXLimiter+terminalWidth;
 
             //check if we're in the last chunk (x-wise)
-            if (chunkOffsetX == level.getWidth()/chunkWidth) {
+            if (chunkOffsetX == level.getWidth()/chunkWidth-1) {
                 startX = this.level.getWidth() - chunkWidth-2*paddingX;
                 limitX = this.level.getHeight();
             }
@@ -268,8 +268,8 @@ public class Game implements Terminal.ResizeListener, Renderer{
             limitY = chunkOffsetY*chunkHeight-padYLimiter+terminalHeight-statusRowSize;
 
             //check if we're in the last chunk (y-wise)
-            if (chunkOffsetY == level.getHeight()/chunkHeight) {
-                startY = this.level.getHeight()-chunkWidth-2*paddingY;
+            if (chunkOffsetY == level.getHeight()/chunkHeight-1) {
+                startY = this.level.getHeight()-chunkHeight-2*paddingY;
                 limitY = this.level.getHeight();
             }
 
@@ -330,7 +330,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
         if (chunkOffsetX == 0) {
             //First Chunk
             return x - chunkOffsetX * getChunkWidth();
-        } else if (chunkOffsetX == level.getWidth()/getChunkWidth()) {
+        } else if (chunkOffsetX == level.getWidth()/getChunkWidth()-1) {
             //Last chunk
             //return x - chunkOffsetX * getChunkWidth() + 3*paddingX;
             return x - (this.level.getWidth() - getChunkWidth() - 2 * paddingX);
@@ -349,7 +349,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
         if (chunkOffsetY == 0) {
             //First Chunk
             return y - chunkOffsetY * getChunkHeight() + statusRowSize;
-        } else if (chunkOffsetY == level.getHeight()/getChunkHeight()) {
+        } else if (chunkOffsetY == level.getHeight()/getChunkHeight()-1) {
             //Last Chunk
             return y - (this.level.getHeight() - getChunkHeight() - 2 * paddingY) + statusRowSize;
         } else {

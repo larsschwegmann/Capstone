@@ -175,8 +175,12 @@ public class GameStateManager {
             com.googlecode.lanterna.input.Key input = terminal.readInput();
             this.lastInput = input;
             
+            Renderer updateRenderer = activeRenderer;
             activeRenderer.update();
-            activeRenderer.render();
+            if (updateRenderer == activeRenderer) {
+                //Renderer could have changed
+                activeRenderer.render();
+            }
             
             if (DEBUG) {
                 try {
@@ -249,6 +253,7 @@ public class GameStateManager {
             showError("Level wurde nicht gefunden! Bitte README.md lesen!");
         } catch (Exception ex) {
             ex.printStackTrace();
+            showError("Kein gepeichertes Spiel gefunden! Bitte README.md lesen!");
         }
     }
 
@@ -288,6 +293,7 @@ public class GameStateManager {
             showError("Kein gepeichertes Spiel gefunden! Bitte README.md lesen!");
         } catch (Exception ex) {
             ex.printStackTrace();
+            showError("Kein gepeichertes Spiel gefunden! Bitte README.md lesen!");
         }
     }
 

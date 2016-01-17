@@ -5,6 +5,7 @@ import com.larsschwegmann.labyrinth.level.entities.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 public class Level {
 
@@ -112,8 +113,9 @@ public class Level {
         }
         if (isSavedLevel) {
             String playerCoordinatesString = rawLevelData.getProperty(PLAYER_KEY);
-            int playerX = Integer.parseInt(playerCoordinatesString.substring(0, 1));
-            int playerY = Integer.parseInt(playerCoordinatesString.substring(2, 3));
+            String[] coordinates = playerCoordinatesString.split(",");
+            int playerX = Integer.parseInt(coordinates[0]);
+            int playerY = Integer.parseInt(coordinates[1]);
             player = EntityFactory.createPlayer(playerX, playerY);
             player.setLivesLeft(Integer.parseInt(rawLevelData.getProperty(PLAYER_LIVES_KEY)));
             int keyAmount = Integer.parseInt(rawLevelData.getProperty(PLAYER_INVENTORY_KEY));
