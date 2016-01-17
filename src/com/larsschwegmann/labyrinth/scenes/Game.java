@@ -3,6 +3,7 @@ package com.larsschwegmann.labyrinth.scenes;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.TerminalSize;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
+import com.larsschwegmann.labyrinth.AudioManager;
 import com.larsschwegmann.labyrinth.GameStateManager;
 import com.larsschwegmann.labyrinth.rendering.RenderingToolchain;
 import com.larsschwegmann.labyrinth.level.Level;
@@ -22,6 +23,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
     private boolean redrawInventory = false;
     private boolean redrawLivesLeft = false;
     private boolean playerDidMove = true;
+    private int previousLivesLeft = 10;
 
     //Offset for Scrolling
     private int chunkOffsetX = 0;
@@ -68,6 +70,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
         if (p.getLivesLeft() <= 0) {
             //Game over
+            AudioManager.playAudio("enemy_hit");
             GameStateManager.sharedInstance().setCurrentGameState(GameStateManager.GameState.Lost);
         }
 
@@ -95,6 +98,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
                     //Pause
                     redrawStatics = true;
                     redrawStatus = true;
+                    AudioManager.playAudio("select");
                     GameStateManager.sharedInstance().pauseGame();
                     break;
                 case NormalKey:
@@ -129,19 +133,25 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
         if (entityAtPlayerPos instanceof Key) {
             //Found Key
+            AudioManager.playAudio("pickup_key");
             level.setEntityAtIndex(null, p.getX(), p.getY());
             p.addToInventory(entityAtPlayerPos);
             redrawInventory = true;
         } else if (entityAtPlayerPos instanceof StaticTrap || entityAtPlayerPos instanceof DynamicTrap) {
             //Stepped on Trap
             p.setLivesLeft(p.getLivesLeft() - 1);
+            if (p.getLivesLeft()/10 != previousLivesLeft) {
+                AudioManager.playAudio("enemy_hit");
+            }
             redrawLivesLeft = true;
         } else if (entityAtPlayerPos instanceof Exit) {
             //Stands on Exit
             if (p.inventoryContainsObjectOfClass(Key.class)) {
                 //Only win if player has key for Exit
+                AudioManager.playAudio("pickup_key");
                 GameStateManager.sharedInstance().setCurrentGameState(GameStateManager.GameState.Won);
             } else {
+                AudioManager.playAudio("back");
                 String message = "Du brauchst einen Schlüssel um den Ausgang zu benutzen!";
                 RenderingToolchain.drawString(terminal, message, terminal.getTerminalSize().getColumns() - message.length() - 1, 1, Terminal.Color.RED);
             }
@@ -192,15 +202,18 @@ public class Game implements Terminal.ResizeListener, Renderer{
         //Render Status
         if (redrawStatus || redrawLivesLeft) {
             //Redraw Player Health
-            RenderingToolchain.clearRect(terminal, 2, 1, 17, 1);
-            int hearts = p.getLivesLeft()/10;
-            Terminal.Color livesColor = Terminal.Color.RED;
-            String livesLeft = "Leben: ";
-            for (int i=0; i<hearts; i++) {
-                livesLeft += "♥";
+            if (p.getLivesLeft()/10 != previousLivesLeft || p.getLivesLeft()/10 == 10) {
+                previousLivesLeft = p.getLivesLeft()/10;
+                RenderingToolchain.clearRect(terminal, 2, 1, 17, 1);
+                int hearts = p.getLivesLeft()/10;
+                Terminal.Color livesColor = Terminal.Color.RED;
+                String livesLeft = "Leben: ";
+                for (int i=0; i<hearts; i++) {
+                    livesLeft += "♥";
+                }
+                RenderingToolchain.drawString(terminal, livesLeft, 2, 1, livesColor);
+                redrawLivesLeft = false;
             }
-            RenderingToolchain.drawString(terminal, livesLeft, 2, 1, livesColor);
-            redrawLivesLeft = false;
         }
 
         if (redrawStatus || redrawInventory) {
@@ -358,9 +371,9 @@ public class Game implements Terminal.ResizeListener, Renderer{
     private int getChunkHeight() {
         return terminal.getTerminalSize().getRows() - 2 * paddingY - statusRowSize;
     }
-
+    
     ////////////////////////////////////////////////////////////////////
-    //Resize Listener
+    // Resize Listener
     ////////////////////////////////////////////////////////////////////
 
     @Override

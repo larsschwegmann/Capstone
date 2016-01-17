@@ -2,6 +2,7 @@ package com.larsschwegmann.labyrinth.scenes;
 
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.TerminalSize;
+import com.larsschwegmann.labyrinth.AudioManager;
 import com.larsschwegmann.labyrinth.GameStateManager;
 import com.larsschwegmann.labyrinth.rendering.RenderingToolchain;
 
@@ -50,6 +51,7 @@ public class MainMenu implements Renderer, Terminal.ResizeListener{
                     }
                     break;
                 case Enter:
+                    AudioManager.playAudio("select");
                     chooseMenuItem();
                     break;
                 default:
