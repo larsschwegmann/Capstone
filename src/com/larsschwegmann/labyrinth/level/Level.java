@@ -10,6 +10,9 @@ public class Level {
 
     private final String WIDTH_KEY = "Width";
     private final String HEIGHT_KEY = "Height";
+    private final String PLAYER_KEY = "Player";
+    private final String PLAYER_LIVES_KEY = "PlayerLivesLeft";
+    private final String PLAYER_INVENTORY_KEY = "PlayerKeyAmount";
 
     //Contains the raw Properties file
     private Properties rawLevelData;
@@ -101,8 +104,8 @@ public class Level {
                     levelData[x][y] = EntityFactory.createEntity(rawEntityValueAtPos, x, y);
                     if (levelData[x][y] instanceof Entrance && !isSavedLevel) {
                         player = EntityFactory.createPlayer(x, y);
-                    } else if (rawEntityValueAtPos == 6 && isSavedLevel) {
-                        player = EntityFactory.createPlayer(x, y);
+                    //} else if (rawEntityValueAtPos == 6 && isSavedLevel) {
+                    //    player = EntityFactory.createPlayer(x, y);
                     } else if (levelData[x][y] instanceof DynamicTrap) {
                         dynamicTraps.add((DynamicTrap)levelData[x][y]);
                     }
@@ -110,8 +113,12 @@ public class Level {
             }
         }
         if (isSavedLevel) {
-            player.setLivesLeft(Integer.parseInt(rawLevelData.getProperty("livesLeft")));
-            int keyAmount = Integer.parseInt(rawLevelData.getProperty("keyAmount"));
+            String playerCoordinatesString = rawLevelData.getProperty(PLAYER_KEY);
+            int playerX = Integer.parseInt(playerCoordinatesString.substring(0, 1));
+            int playerY = Integer.parseInt(playerCoordinatesString.substring(2, 3));
+            player = EntityFactory.createPlayer(playerX, playerY);
+            player.setLivesLeft(Integer.parseInt(rawLevelData.getProperty(PLAYER_LIVES_KEY)));
+            int keyAmount = Integer.parseInt(rawLevelData.getProperty(PLAYER_INVENTORY_KEY));
             for (int i=0; i<keyAmount; i++) {
                 Key k = new Key(0, 0);
                 player.addToInventory(k);
@@ -128,9 +135,10 @@ public class Level {
         Properties props = new Properties();
         props.setProperty(WIDTH_KEY, this.width + "");
         props.setProperty(HEIGHT_KEY, this.height + "");
-        props.setProperty(player.getX() + "," + player.getY(), "6");
-        props.setProperty("livesLeft", player.getLivesLeft() + "");
-        props.setProperty("keyAmount", player.getInventory().size() + "");
+        //props.setProperty(player.getX() + "," + player.getY(), "6");
+        props.setProperty(PLAYER_KEY, player.getX() + "," + player.getY());
+        props.setProperty(PLAYER_LIVES_KEY, player.getLivesLeft() + "");
+        props.setProperty(PLAYER_INVENTORY_KEY, player.getInventory().size() + "");
         for (int x=0; x<this.width; x++) {
             for (int y=0; y<this.height; y++) {
                 if (levelData[x][y] != null) {
