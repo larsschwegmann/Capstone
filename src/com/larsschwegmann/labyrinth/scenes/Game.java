@@ -259,9 +259,9 @@ public class Game implements Terminal.ResizeListener, Renderer{
             limitX = chunkOffsetX*chunkWidth-padXLimiter+terminalWidth;
 
             //check if we're in the last chunk (x-wise)
-            if (chunkOffsetX == level.getWidth()/chunkWidth-1) {
+            if (chunkOffsetX == level.getWidth()/chunkWidth) {
                 startX = this.level.getWidth() - chunkWidth-2*paddingX;
-                limitX = this.level.getHeight();
+                limitX = this.level.getWidth();
             }
 
             startY = chunkOffsetY*chunkHeight-padY;
@@ -330,7 +330,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
         if (chunkOffsetX == 0) {
             //First Chunk
             return x - chunkOffsetX * getChunkWidth();
-        } else if (chunkOffsetX == level.getWidth()/getChunkWidth()-1) {
+        } else if (chunkOffsetX == level.getWidth()/getChunkWidth()) {
             //Last chunk
             //return x - chunkOffsetX * getChunkWidth() + 3*paddingX;
             return x - (this.level.getWidth() - getChunkWidth() - 2 * paddingX);
