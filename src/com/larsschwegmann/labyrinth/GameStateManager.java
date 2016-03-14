@@ -1,5 +1,11 @@
 package com.larsschwegmann.labyrinth;
 
+import com.larsschwegmann.labyrinth.scenes.MainMenu;
+import com.larsschwegmann.labyrinth.scenes.PauseMenu;
+import com.larsschwegmann.labyrinth.scenes.GameOverMenu;
+import com.larsschwegmann.labyrinth.scenes.Game;
+import com.larsschwegmann.labyrinth.scenes.Renderer;
+import com.larsschwegmann.labyrinth.scenes.LegendMenu;
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.terminal.Terminal;
@@ -165,16 +171,20 @@ public class GameStateManager {
                 setActiveRenderer(gom);
             }
 
-            //Update Kaybuffer
+            //Update Keybuffer
             com.googlecode.lanterna.input.Key input = terminal.readInput();
             this.lastInput = input;
-
+            
+            Renderer updateRenderer = activeRenderer;
             activeRenderer.update();
-            activeRenderer.render();
-            terminal.flush();
-
+            if (updateRenderer == activeRenderer) {
+                //Renderer could have changed
+                activeRenderer.render();
+            }
+            
             if (DEBUG) {
                 try {
+                    //Prevent divisons by 0 in Frame counter
                     Thread.sleep(5);
                 } catch (Exception ex) {
                 }
@@ -236,15 +246,14 @@ public class GameStateManager {
             Level lvl = new Level("level.properties");
             lvl.load();
             game = new Game(lvl);
-            game.reset();
             this.currentGameState = GameState.Playing;
             setActiveRenderer(game);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
-            showError("Level wurde nicht gefunden!");
-            System.exit(1);
+            showError("Level wurde nicht gefunden! Bitte README.md lesen!");
         } catch (Exception ex) {
             ex.printStackTrace();
+            showError("Kein gepeichertes Spiel gefunden! Bitte README.md lesen!");
         }
     }
 
@@ -276,16 +285,15 @@ public class GameStateManager {
             Level lvl = new Level("level_saved.properties");
             lvl.load();
             this.game = new Game(lvl);
-            this.game.reset(); //Resets Game Scene
             this.currentGameState = GameState.Playing;
             setActiveRenderer(game);
         } catch (FileNotFoundException ex) {
             //Level not found
             ex.printStackTrace();
-            showError("Kein gepeichertes Spiel gefunden!");
-            System.exit(1);
+            showError("Kein gepeichertes Spiel gefunden! Bitte README.md lesen!");
         } catch (Exception ex) {
             ex.printStackTrace();
+            showError("Kein gepeichertes Spiel gefunden! Bitte README.md lesen!");
         }
     }
 
@@ -303,7 +311,6 @@ public class GameStateManager {
             //Couldn't write file
             ex.printStackTrace();
             showError("Spielstand konnte nicht gepeichert werden!");
-            System.exit(1);
         }
     }
 

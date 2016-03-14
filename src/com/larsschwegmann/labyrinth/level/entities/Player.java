@@ -1,7 +1,7 @@
 package com.larsschwegmann.labyrinth.level.entities;
 
 import com.googlecode.lanterna.terminal.Terminal;
-import com.larsschwegmann.labyrinth.Game;
+import com.larsschwegmann.labyrinth.scenes.Game;
 import com.larsschwegmann.labyrinth.GameStateManager;
 
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ public class Player extends Entity {
 
     @Override
     public char getSymbol() {
-        return '\u263A';
+        return '\u263B';
     }
 
     public boolean move (Direction d) {

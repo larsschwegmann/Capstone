@@ -1,7 +1,10 @@
-package com.larsschwegmann.labyrinth;
+package com.larsschwegmann.labyrinth.scenes;
 
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.TerminalSize;
+import com.larsschwegmann.labyrinth.AudioManager;
+import com.larsschwegmann.labyrinth.GameStateManager;
+import com.larsschwegmann.labyrinth.rendering.RenderingToolchain;
 
 public class GameOverMenu extends MainMenu {
 
@@ -20,6 +23,7 @@ public class GameOverMenu extends MainMenu {
         com.googlecode.lanterna.input.Key input = GameStateManager.sharedInstance().readInput();
         if (input != null) {
             MainMenu mm = new MainMenu();
+            AudioManager.playAudio("select");
             GameStateManager.sharedInstance().returnToMainMenu();
         }
     }

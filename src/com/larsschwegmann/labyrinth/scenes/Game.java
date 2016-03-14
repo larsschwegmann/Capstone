@@ -1,15 +1,21 @@
-package com.larsschwegmann.labyrinth;
+package com.larsschwegmann.labyrinth.scenes;
 
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.TerminalSize;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
+import com.larsschwegmann.labyrinth.AudioManager;
+import com.larsschwegmann.labyrinth.GameStateManager;
+import com.larsschwegmann.labyrinth.rendering.RenderingToolchain;
 import com.larsschwegmann.labyrinth.level.Level;
 import com.larsschwegmann.labyrinth.level.entities.*;
+import java.util.Timer;
 
 public class Game implements Terminal.ResizeListener, Renderer{
 
     private Terminal terminal = GameStateManager.sharedInstance().getTerminal();
     private Level level; //current level
+    private DynamicTrapUpdateThread trapUpdater;
+    private Timer trapUpdateTimer;
 
     //dynamic redrawing
     private boolean redrawStatics = true; //Redraws the level (walls and static objects)
@@ -17,6 +23,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
     private boolean redrawInventory = false;
     private boolean redrawLivesLeft = false;
     private boolean playerDidMove = true;
+    private int previousLivesLeft = 10;
 
     //Offset for Scrolling
     private int chunkOffsetX = 0;
@@ -63,6 +70,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
         if (p.getLivesLeft() <= 0) {
             //Game over
+            AudioManager.playAudio("enemy_hit");
             GameStateManager.sharedInstance().setCurrentGameState(GameStateManager.GameState.Lost);
         }
 
@@ -90,6 +98,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
                     //Pause
                     redrawStatics = true;
                     redrawStatus = true;
+                    AudioManager.playAudio("select");
                     GameStateManager.sharedInstance().pauseGame();
                     break;
                 case NormalKey:
@@ -113,29 +122,38 @@ public class Game implements Terminal.ResizeListener, Renderer{
         }
 
         //Update dynamic enities
+        //Now done by trapUpdater
+        /*
         for (DynamicTrap d : level.getDynamicTraps()) {
             d.update();
         }
-
+        */
         //Check entities under player position
         Entity entityAtPlayerPos = level.getEntityAtIndex(p.getX(), p.getY());
 
         if (entityAtPlayerPos instanceof Key) {
             //Found Key
+            AudioManager.playAudio("pickup_key");
             level.setEntityAtIndex(null, p.getX(), p.getY());
             p.addToInventory(entityAtPlayerPos);
             redrawInventory = true;
         } else if (entityAtPlayerPos instanceof StaticTrap || entityAtPlayerPos instanceof DynamicTrap) {
             //Stepped on Trap
             p.setLivesLeft(p.getLivesLeft() - 1);
+            if (p.getLivesLeft()/10 != previousLivesLeft) {
+                AudioManager.playAudio("enemy_hit");
+            }
             redrawLivesLeft = true;
         } else if (entityAtPlayerPos instanceof Exit) {
             //Stands on Exit
             if (p.inventoryContainsObjectOfClass(Key.class)) {
                 //Only win if player has key for Exit
+                AudioManager.playAudio("pickup_key");
                 GameStateManager.sharedInstance().setCurrentGameState(GameStateManager.GameState.Won);
             } else {
-                //TODO: Tell player to get key first
+                AudioManager.playAudio("back");
+                String message = "Du brauchst einen Schlüssel um den Ausgang zu benutzen!";
+                RenderingToolchain.drawString(terminal, message, terminal.getTerminalSize().getColumns() - message.length() - 1, 1, Terminal.Color.RED);
             }
         }
 
@@ -148,7 +166,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
         if (newChunkOffsetX != chunkOffsetX || newChunkOffsetY != chunkOffsetY) {
             redrawStatics = true;
-            redrawStatus = true;
+            //redrawStatus = true;
             playerDidMove = true;
         }
 
@@ -184,15 +202,18 @@ public class Game implements Terminal.ResizeListener, Renderer{
         //Render Status
         if (redrawStatus || redrawLivesLeft) {
             //Redraw Player Health
-            RenderingToolchain.clearRect(terminal, 2, 1, 17, 1);
-            int hearts = p.getLivesLeft()/10;
-            Terminal.Color livesColor = Terminal.Color.RED;
-            String livesLeft = "Leben: ";
-            for (int i=0; i<hearts; i++) {
-                livesLeft += "♥";
+            if (p.getLivesLeft()/10 != previousLivesLeft || redrawStatus) {
+                previousLivesLeft = p.getLivesLeft()/10;
+                RenderingToolchain.clearRect(terminal, 2, 1, 17, 1);
+                int hearts = p.getLivesLeft()/10;
+                Terminal.Color livesColor = Terminal.Color.RED;
+                String livesLeft = "Leben: ";
+                for (int i=0; i<hearts; i++) {
+                    livesLeft += "♥";
+                }
+                RenderingToolchain.drawString(terminal, livesLeft, 2, 1, livesColor);
+                redrawLivesLeft = false;
             }
-            RenderingToolchain.drawString(terminal, livesLeft, 2, 1, livesColor);
-            redrawLivesLeft = false;
         }
 
         if (redrawStatus || redrawInventory) {
@@ -240,15 +261,15 @@ public class Game implements Terminal.ResizeListener, Renderer{
             //check if we're in the last chunk (x-wise)
             if (chunkOffsetX == level.getWidth()/chunkWidth) {
                 startX = this.level.getWidth() - chunkWidth-2*paddingX;
-                limitX = this.level.getHeight();
+                limitX = this.level.getWidth();
             }
 
             startY = chunkOffsetY*chunkHeight-padY;
             limitY = chunkOffsetY*chunkHeight-padYLimiter+terminalHeight-statusRowSize;
 
             //check if we're in the last chunk (y-wise)
-            if (chunkOffsetY == level.getHeight()/chunkHeight) {
-                startY = this.level.getHeight()-chunkWidth-2*paddingY;
+            if (chunkOffsetY == level.getHeight()/chunkHeight-1) {
+                startY = this.level.getHeight()-chunkHeight-2*paddingY;
                 limitY = this.level.getHeight();
             }
 
@@ -328,7 +349,7 @@ public class Game implements Terminal.ResizeListener, Renderer{
         if (chunkOffsetY == 0) {
             //First Chunk
             return y - chunkOffsetY * getChunkHeight() + statusRowSize;
-        } else if (chunkOffsetY == level.getHeight()/getChunkHeight()) {
+        } else if (chunkOffsetY == level.getHeight()/getChunkHeight()-1) {
             //Last Chunk
             return y - (this.level.getHeight() - getChunkHeight() - 2 * paddingY) + statusRowSize;
         } else {
@@ -350,9 +371,9 @@ public class Game implements Terminal.ResizeListener, Renderer{
     private int getChunkHeight() {
         return terminal.getTerminalSize().getRows() - 2 * paddingY - statusRowSize;
     }
-
+    
     ////////////////////////////////////////////////////////////////////
-    //Resize Listener
+    // Resize Listener
     ////////////////////////////////////////////////////////////////////
 
     @Override
@@ -366,6 +387,10 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     @Override
     public void willBecomeActiveRenderer() {
+        //trapUpdater.startUpdating();
+        this.trapUpdater = new DynamicTrapUpdateThread(level.getDynamicTraps());
+        this.trapUpdateTimer = new Timer("DTrapUpdateThread");
+        this.trapUpdateTimer.schedule(this.trapUpdater, 0, 500);
         terminal.clearScreen();
         playerDidMove = true;
         terminal.addResizeListener(this);
@@ -373,11 +398,10 @@ public class Game implements Terminal.ResizeListener, Renderer{
 
     @Override
     public void willResignActiveRenderer() {
+        //trapUpdater.stopUpdating();
+        this.trapUpdater.cancel();
+        this.trapUpdateTimer.purge();
+        this.trapUpdateTimer.cancel();
         terminal.removeResizeListener(this);
-    }
-
-    public void reset() {
-        //playerDidMove = true;
-        //this.level = null;
     }
 }

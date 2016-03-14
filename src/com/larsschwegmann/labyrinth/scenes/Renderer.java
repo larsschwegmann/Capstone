@@ -1,4 +1,4 @@
-package com.larsschwegmann.labyrinth;
+package com.larsschwegmann.labyrinth.scenes;
 
 public interface Renderer {
 

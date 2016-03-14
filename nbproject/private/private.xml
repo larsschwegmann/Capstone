@@ -3,9 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/lars/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/Game.java</file>
-            <file>file:/Users/lars/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/GameStateManager.java</file>
-            <file>file:/Users/lars/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/Main.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/level/Level.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/GameStateManager.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/scenes/Game.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/AudioManager.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/scenes/MainMenu.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/level/entities/DynamicTrapUpdateThread.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/Main.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/level/entities/Player.java</file>
         </group>
     </open-files>
 </project-private>

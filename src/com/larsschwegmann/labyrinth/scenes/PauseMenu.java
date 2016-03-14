@@ -1,4 +1,7 @@
-package com.larsschwegmann.labyrinth;
+package com.larsschwegmann.labyrinth.scenes;
+
+import com.larsschwegmann.labyrinth.AudioManager;
+import com.larsschwegmann.labyrinth.GameStateManager;
 
 public class PauseMenu extends MainMenu{
 
@@ -21,6 +24,7 @@ public class PauseMenu extends MainMenu{
             switch (input.getKind()) {
                 case Escape:
                     //Return to game
+                    AudioManager.playAudio("back");
                     GameStateManager.sharedInstance().resumeGame();
                     break;
             }
@@ -32,18 +36,23 @@ public class PauseMenu extends MainMenu{
         switch (selectedElementIndex) {
             case 0:
                 //Resume Game
+                AudioManager.playAudio("back");
                 GameStateManager.sharedInstance().resumeGame();
                 break;
             case 1:
+                AudioManager.playAudio("select");
                 GameStateManager.sharedInstance().showLegend();
                 break;
             case 2:
+                AudioManager.playAudio("select");
                 GameStateManager.sharedInstance().loadGame();
                 break;
             case 3:
+                AudioManager.playAudio("select");
                 GameStateManager.sharedInstance().saveAndExitGame();
                 break;
             case 4:
+                AudioManager.playAudio("select");
                 GameStateManager.sharedInstance().returnToMainMenu();
                 break;
         }
