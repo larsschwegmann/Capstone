@@ -5,9 +5,12 @@
         <group>
             <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/level/Level.java</file>
             <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/GameStateManager.java</file>
-            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/level/entities/Entity.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/scenes/Game.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/AudioManager.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/scenes/MainMenu.java</file>
             <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/level/entities/DynamicTrapUpdateThread.java</file>
             <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/Main.java</file>
+            <file>file:/Users/server/Documents/Development/Capstone/src/com/larsschwegmann/labyrinth/level/entities/Player.java</file>
         </group>
     </open-files>
 </project-private>
